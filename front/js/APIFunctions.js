@@ -1,7 +1,7 @@
 // Import Product class
-import { Product } from "./ProductFunctions.js";
+import { Product } from "./ProductTools.js";
 
-// Variable that store all products
+// Variable declaration
 let allProductsJSON;
 let allProducts = [];
 
@@ -22,7 +22,6 @@ async function main() {
   allProductsJSON = await GetAllProductsFromAPI("http://localhost:3000/api/products/");
   // Parse JSON file to an array of Product class
   allProductsJSON.forEach( product => allProducts.push(new Product(product.colors, product._id, product.name, product.price, product.imageUrl, product.description, product.altTxt)));
-  console.log(allProducts);
 }
 
 main();

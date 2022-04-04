@@ -1,4 +1,4 @@
-import { Product, CardItem } from "./ProductTools.js";
+import { Product } from "./ProductTools.js";
 import { GetProductFromAPI } from "./APIFunctions.js";
 
 // Get URL and parse parameter to get ID field
@@ -24,40 +24,40 @@ async function main() {
   canape.colors.forEach( color => document.getElementById('colors').innerHTML += `<option value="${color}">${color}</option>`);
 }
 
-function AddToCard() {
+function AddTocart() {
   // Sample of content:
-  // cardList = { "productID": { "blue": 4, "pink": 3}}
-  var cardList = {};
+  // cartList = { "productID": { "blue": 4, "pink": 3}}
+  var cartList = {};
   // Parse item options
   var itemQuantity = parseInt(document.getElementById('quantity').value);
   var itemColor = document.getElementById('colors').value;
   // Verify that a color has been selected
   if(itemColor !== "") {
     // Verify if objet already exists in localStorage
-    if(localStorage.getItem('cardList')) {
+    if(localStorage.getItem('cartList')) {
       // Get existing localStorage variable for this item
       // Add existing quantity to the new quantity
-      cardList = JSON.parse(localStorage.getItem("cardList"));
-      // Test if product id is in the cardList dictionnay
-      if (cardList[productID]){
+      cartList = JSON.parse(localStorage.getItem("cartList"));
+      // Test if product id is in the cartList dictionnay
+      if (cartList[productID]){
         // Test if quantity is null / add existing quantity to the new quantity
-        if(cardList[productID][itemColor]){
-          cardList[productID][itemColor] += itemQuantity;
+        if(cartList[productID][itemColor]){
+          cartList[productID][itemColor] += itemQuantity;
         } else {
-          cardList[productID][itemColor] = itemQuantity;
+          cartList[productID][itemColor] = itemQuantity;
         }
       } else {
-        cardList[productID] = { [itemColor] : parseInt(itemQuantity)};
+        cartList[productID] = { [itemColor] : parseInt(itemQuantity)};
       }
       // Updating the localStorage variable
-      localStorage.setItem("cardList", JSON.stringify(cardList));
+      localStorage.setItem("cartList", JSON.stringify(cartList));
     } else{
       console.log("not existing");
-      cardList[productID] = { [itemColor] : parseInt(itemQuantity) };
+      cartList[productID] = { [itemColor] : parseInt(itemQuantity) };
       // Set new localStorage variable
-      localStorage.setItem("cardList", JSON.stringify(cardList));
+      localStorage.setItem("cartList", JSON.stringify(cartList));
     }
-    console.log(cardList);
+    console.log(cartList);
   // If no color is selected
   } else{
     document.querySelector('.item__content__settings__color > label').style.color = '#FF0000';
@@ -65,4 +65,4 @@ function AddToCard() {
 }
 
 main();
-document.getElementById('addToCart').addEventListener("click", AddToCard);
+document.getElementById('addToCart').addEventListener("click", AddTocart);

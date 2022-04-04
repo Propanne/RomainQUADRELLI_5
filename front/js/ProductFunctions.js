@@ -25,29 +25,40 @@ async function main() {
 }
 
 function AddToCard() {
+  // Sample of content:
+  // cardList = { "productID": { "blue": 4, "pink": 3}}
   var cardList = {};
   // Parse item options
   var itemQuantity = parseInt(document.getElementById('quantity').value);
   var itemColor = document.getElementById('colors').value;
   // Verify that a color has been selected
   if(itemColor !== "") {
-    var cardItem = new CardItem(canape.name, itemColor, itemQuantity);
     // Verify if objet already exists in localStorage
-    if(localStorage.getItem(canape.name+"_"+itemColor)){
-      console.log("Object exists");
+    if(localStorage.getItem('cardList')) {
       // Get existing localStorage variable for this item
       // Add existing quantity to the new quantity
-      var existingItemQuantity = JSON.parse(localStorage.getItem(canape.name+"_"+itemColor)).quantity;
-      cardItem.quantity += parseInt(existingItemQuantity);
+      cardList = JSON.parse(localStorage.getItem("cardList"));
+      // Test if product id is in the cardList dictionnay
+      if (cardList[productID]){
+        // Test if quantity is null / add existing quantity to the new quantity
+        if(cardList[productID][itemColor]){
+          cardList[productID][itemColor] += itemQuantity;
+        } else {
+          cardList[productID][itemColor] = itemQuantity;
+        }
+      } else {
+        cardList[productID] = { [itemColor] : parseInt(itemQuantity)};
+      }
       // Updating the localStorage variable
-      localStorage.setItem(canape.name+"_"+itemColor, JSON.stringify(cardItem));
+      localStorage.setItem("cardList", JSON.stringify(cardList));
     } else{
-      console.log("Object not existing");
+      console.log("not existing");
+      cardList[productID] = { [itemColor] : parseInt(itemQuantity) };
       // Set new localStorage variable
-      localStorage.setItem(canape.name+"_"+itemColor, JSON.stringify(cardItem));
+      localStorage.setItem("cardList", JSON.stringify(cardList));
     }
-
-
+    console.log(cardList);
+  // If no color is selected
   } else{
     document.querySelector('.item__content__settings__color > label').style.color = '#FF0000';
   }

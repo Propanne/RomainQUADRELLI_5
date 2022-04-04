@@ -10,11 +10,4 @@ class Product {
   }
 }
 
-class CardItem {
-  constructor(name, color, quantity){
-    this.itemName = name;
-    this.color = color;
-    this.quantity = quantity;
-  }
-}
-export { Product, CardItem };
+export { Product };

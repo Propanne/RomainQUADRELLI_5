@@ -1,6 +1,3 @@
-// Import Product class
-import { Product } from "./ProductTools.js";
-
 // Function that retrieve all products from API
 async function GetAllProductsFromAPI(url) {
   var response = await fetch(url);

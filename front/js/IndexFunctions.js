@@ -1,4 +1,3 @@
-import { Product } from "./ProductTools.js";
 import { GetAllProductsFromAPI } from "./APIFunctions.js";
 
 // Variable declaration

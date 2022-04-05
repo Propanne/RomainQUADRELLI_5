@@ -33,6 +33,7 @@ function AddTocart() {
   var itemColor = document.getElementById('colors').value;
   // Verify that a color has been selected
   if(itemColor !== "") {
+    document.querySelector('.item__content__settings__color > label').style.color = '#FFFFFF';
     // Verify if objet already exists in localStorage
     if(localStorage.getItem('cartList')) {
       // Get existing localStorage variable for this item

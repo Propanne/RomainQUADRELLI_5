@@ -52,12 +52,10 @@ function AddTocart() {
       // Updating the localStorage variable
       localStorage.setItem("cartList", JSON.stringify(cartList));
     } else{
-      console.log("not existing");
       cartList[productID] = { [itemColor] : parseInt(itemQuantity) };
       // Set new localStorage variable
       localStorage.setItem("cartList", JSON.stringify(cartList));
     }
-    console.log(cartList);
   // If no color is selected
   } else{
     document.querySelector('.item__content__settings__color > label').style.color = '#FF0000';

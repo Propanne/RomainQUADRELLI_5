@@ -1,4 +1,5 @@
 import { GetAllProductsFromAPI } from "./APIFunctions.js";
+import { Product } from "./ProductTools.js";
 
 // Variable declaration
 let allProductsJSON;

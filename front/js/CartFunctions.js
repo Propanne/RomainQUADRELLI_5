@@ -12,6 +12,8 @@ async function GetProductCatalog(){
 
 // Function that display products in cart
 async function DisplayCart(productList, cartList){
+  // Clear innerHTML
+  document.getElementById('cart__items').innerHTML = '';
   // Loop on products ID in cart
   productList.forEach( product => {
     if (cartList[product._id]){
@@ -84,6 +86,36 @@ function RemoveItem(tag) {
   DisplayTotalCartInformations();
 }
 
+// Function that take care of quantity modifications
+async function ModifyQuantity(tag){
+  // Set variables
+  var cartList = tag.target.cartList;
+  var productList = tag.target.productList;
+  var articleParent = tag.target.closest("article");
+  var itemID = articleParent.getAttribute("data-id");
+  var itemColor = articleParent.querySelector('div.cart__item__content__description > p').innerHTML;
+  var itemQuantity = parseInt(tag.target.value);
+  var previousQuantity = cartList[itemID][itemColor];
+  var itemPrice = articleParent.querySelector('div.cart__item__content__description :nth-child(3)').innerHTML;;
+
+  // Update global cart informations
+  cartPrice = (cartPrice - parseInt(itemPrice) * previousQuantity) + parseInt(itemPrice) * itemQuantity;
+  cartArticlesQuantity = (cartArticlesQuantity - previousQuantity) + itemQuantity;
+  DisplayTotalCartInformations();
+
+  // If quantity is not 0, modify quantity
+  if(itemQuantity > 0) {
+    cartList[itemID][itemColor] = itemQuantity;
+  } else {
+    // Remove color:quantity entry
+    delete cartList[itemID][itemColor];
+    if(cartList[itemID] && Object.keys(cartList[itemID]).length === 0){ delete cartList[itemID];}
+    articleParent.remove();
+  }
+  // Update localStorage cartList with new cart
+  localStorage.setItem("cartList", JSON.stringify(cartList));
+}
+
 async function main() {
   // Set variables
   var cartList = JSON.parse(localStorage.getItem('cartList'));
@@ -93,11 +125,18 @@ async function main() {
   await DisplayCart(productList, cartList);
   DisplayTotalCartInformations();
 
-  // Add Listener event on 'supprimer' button
+  // Add event listener on 'supprimer' buttons
   var removeButtons = document.getElementsByClassName('deleteItem');
   Array.from(removeButtons).forEach( button => {
     button.cartList = cartList;
-    button.addEventListener("click", RemoveItem);
+    button.addEventListener('click', RemoveItem);
+  });
+  // Add event listener of 'itemQuantity' buttons
+  var quantityButtons = document.getElementsByClassName('itemQuantity');
+  Array.from(quantityButtons).forEach( input => {
+    input.cartList = cartList;
+    input.productList = productList;
+    input.addEventListener('input', ModifyQuantity);
   });
 }
 main();

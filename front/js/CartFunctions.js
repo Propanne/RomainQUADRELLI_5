@@ -52,12 +52,41 @@ function DisplayTotalCartInformations(){
   document.getElementById('totalQuantity').innerHTML = cartArticlesQuantity;
   document.getElementById('totalPrice').innerHTML = cartPrice;
 }
+// Function that remove item from cart
+function RemoveItem(tag) {
+  // Get article parent element of 'supprimer' button
+  // Get itemID from "data-id" attribute and color from article child element
+  // Remove the key:value id:color from cartList | remove cartList[id] if empty
+  // Corresponding article
+  var articleParent = tag.target.closest("article");
+  var itemID = articleParent.getAttribute("data-id");
+  var itemColor = articleParent.querySelector('div.cart__item__content__description > p').innerHTML;
+  var cartList = tag.target.cartList;
+
+  // Remove color:quantity from cartList[id]
+  if(cartList[itemID] && cartList[itemID][itemColor]){ delete cartList[itemID][itemColor]; }
+  // Remove cartList[id] if empty
+  if(cartList[itemID] && Object.keys(cartList[itemID]).length === 0){ delete cartList[itemID]}
+  // Remove article from cart list
+  articleParent.remove();
+  // Update localStorage cartList with new cart
+  localStorage.setItem("cartList", JSON.stringify(cartList));
+}
 
 async function main() {
   // Set variables
   var cartList = JSON.parse(localStorage.getItem('cartList'));
   var productList = await GetProductCatalog();
   await DisplayCart(productList, cartList);
+  // Display all product in cart
   DisplayTotalCartInformations();
+  // Add Listener event on 'supprimer' button
+  var removeButtons = document.getElementsByClassName('deleteItem');
+  Array.from(removeButtons).forEach( button => {
+    button.cartList = cartList;
+    button.addEventListener("click", RemoveItem);
+  });
+
+  // document.getElementById('addToCart').addEventListener("click", AddTocart);
 }
 main();

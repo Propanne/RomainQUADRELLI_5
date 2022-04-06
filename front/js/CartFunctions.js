@@ -1,5 +1,5 @@
 import { Product } from "./ProductTools.js";
-import { GetAllProductsFromAPI, GetProductFromAPI } from "./APIFunctions.js";
+import { GetAllProductsFromAPI, GetProductFromAPI, PostCartCommand } from "./APIFunctions.js";
 
 // Global variable definition
 let cartPrice = 0;
@@ -116,6 +116,62 @@ async function ModifyQuantity(tag){
   localStorage.setItem("cartList", JSON.stringify(cartList));
 }
 
+// Function that verify fields info and trigger command
+async function CommandVerification(item) {
+  // Function that test is string is only alphabets
+  function OnlyLetters(str){
+    return /^[a-zA-Z]+$/.test(str);
+  }
+
+  // Prevent default behavior
+  // Set variables
+  event.preventDefault();
+  var warningTags = document.getElementsByClassName('cart__order__form__question');
+  var prenom = document.getElementById('firstName').value;
+  var nom = document.getElementById('lastName').value;
+  var adresse = document.getElementById('address').value;
+  var ville = document.getElementById('city').value;
+  var email = document.getElementById('email').value;
+  var validFields = true;
+
+  // Flush previous existing warnings
+  Array.from(warningTags).forEach( tag => {
+    tag.querySelector('.cart__order__form__question > p').innerHTML = '';
+  });
+
+  // Verify is input are legit
+  if(!OnlyLetters(prenom)){validFields = false; document.getElementById('firstNameErrorMsg').innerHTML = "Sélectionnez un prenom valide.";}
+  if(!OnlyLetters(nom)){validFields = false; document.getElementById('lastNameErrorMsg').innerHTML = "Sélectionnez un nom valide.";}
+  if(/[^a-zA-Z0-9]+$/.test(adresse)){validFields = false; document.getElementById('addressErrorMsg').innerHTML = "Sélectionnez une adresse valide.";}
+  if(!OnlyLetters(ville)){validFields = false; document.getElementById('cityErrorMsg').innerHTML = "Sélectionnez un ville valide.";}
+  if(!/.*@.*\..*/.test(email)){validFields = false; document.getElementById('emailErrorMsg').innerHTML = "Sélectionnez une adresse mail valide.";}
+
+  // If command is valid and buyer information are valids
+  if(validFields){
+    // Setting up buyer variable and productID in cart array
+    // Create data dictionnary to send
+    var productsID = [];
+    for(var id in item.target.cartList){
+      productsID.push(id);
+    }
+    var postData = {
+      contact: {
+        firstName: prenom,
+        lastName: nom,
+        address: adresse,
+        city: ville,
+        email: email
+      },
+      products: productsID
+    };
+
+    var apiResponse = await PostCartCommand(postData);
+    console.log(apiResponse);
+    // Redirect to cart confirmation
+    // document.location.href="http://localhost/P5_QUADRELLI_Romain/front/html/confirmation.html";
+  }
+}
+
 async function main() {
   // Set variables
   var cartList = JSON.parse(localStorage.getItem('cartList'));
@@ -131,12 +187,15 @@ async function main() {
     button.cartList = cartList;
     button.addEventListener('click', RemoveItem);
   });
-  // Add event listener of 'itemQuantity' buttons
+  // Add event listener on 'itemQuantity' buttons
   var quantityButtons = document.getElementsByClassName('itemQuantity');
   Array.from(quantityButtons).forEach( input => {
     input.cartList = cartList;
     input.productList = productList;
     input.addEventListener('input', ModifyQuantity);
   });
+  // Add event listener on 'commander ! ' button
+  document.getElementById('order').cartList = cartList;
+  document.getElementById('order').addEventListener("click", CommandVerification);
 }
 main();

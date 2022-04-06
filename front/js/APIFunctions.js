@@ -23,4 +23,19 @@ async function GetProductFromAPI(id) {
 // URLSearchParams : parse l'URL de la page
 // localStorage : stoque une données dans le stockage local du navigateur
 
-export { GetAllProductsFromAPI, GetProductFromAPI };
+async function PostCartCommand(postData){
+  var headers = {
+  method: "POST",
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify(postData)};
+  var response = await fetch("http://localhost:3000/api/products/order", headers);
+  if (response.ok){
+    let data = await response.json();
+    return data;
+  }
+  else {
+    return "Error while retrieving API products.";
+  }
+}
+
+export { GetAllProductsFromAPI, GetProductFromAPI, PostCartCommand };

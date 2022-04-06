@@ -2,8 +2,8 @@ import { Product } from "./ProductTools.js";
 import { GetProductFromAPI } from "./APIFunctions.js";
 
 // Get URL and parse parameter to get ID field
-let UrlParams = new URLSearchParams(document.location.search);
-let productID = UrlParams.get("id");
+let urlParams = new URLSearchParams(document.location.search);
+let productID = urlParams.get("id");
 let canape = new Product();
 
 async function main() {

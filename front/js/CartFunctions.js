@@ -166,8 +166,9 @@ async function CommandVerification(item) {
     };
 
     var apiResponse = await PostCartCommand(postData);
-    
+
     // Redirect to cart confirmation
+    window.location = 'confirmation.html?command_id='+apiResponse.orderId;
     // document.location.href="http://localhost/P5_QUADRELLI_Romain/front/html/confirmation.html";
   }
 }

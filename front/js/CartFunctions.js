@@ -166,7 +166,7 @@ async function CommandVerification(item) {
     };
 
     var apiResponse = await PostCartCommand(postData);
-    localStorage.setItem('commandInfos', JSON.stringify(apiResponse));
+    
     // Redirect to cart confirmation
     // document.location.href="http://localhost/P5_QUADRELLI_Romain/front/html/confirmation.html";
   }

@@ -13,13 +13,13 @@ async function main() {
   canape = new Product(productJSON.colors, productJSON._id, productJSON.name, productJSON.price, productJSON.imageUrl, productJSON.description, productJSON.altTxt);
 
   // Set canape image
-  document.querySelector(".item__img").innerHTML += `<img src="${canape.imageUrl}" alt="${canape.altTxt}">`;
+  document.querySelector(".item__img").innerHTML = `<img src="${canape.imageUrl}" alt="${canape.altTxt}">`;
   // Set canape name
-  document.getElementById('title').innerHTML += canape.name;
+  document.getElementById('title').innerHTML = canape.name;
   // Set canape price
-  document.getElementById('price').innerHTML += canape.price;
+  document.getElementById('price').innerHTML = canape.price;
   // Set canape description
-  document.getElementById('description').innerHTML += canape.description;
+  document.getElementById('description').innerHTML = canape.description;
   // Set canape colors
   canape.colors.forEach( color => document.getElementById('colors').innerHTML += `<option value="${color}">${color}</option>`);
 }

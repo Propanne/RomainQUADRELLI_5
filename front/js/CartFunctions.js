@@ -98,22 +98,24 @@ async function ModifyQuantity(tag){
   var previousQuantity = cartList[itemID][itemColor];
   var itemPrice = articleParent.querySelector('div.cart__item__content__description :nth-child(3)').innerHTML;;
 
-  // Update global cart informations
-  cartPrice = (cartPrice - parseInt(itemPrice) * previousQuantity) + parseInt(itemPrice) * itemQuantity;
-  cartArticlesQuantity = (cartArticlesQuantity - previousQuantity) + itemQuantity;
-  DisplayTotalCartInformations();
+  if(itemQuantity >= 0){
+    // Update global cart informations
+    cartPrice = (cartPrice - parseInt(itemPrice) * previousQuantity) + parseInt(itemPrice) * itemQuantity;
+    cartArticlesQuantity = (cartArticlesQuantity - previousQuantity) + itemQuantity;
+    DisplayTotalCartInformations();
 
-  // If quantity is not 0, modify quantity
-  if(itemQuantity > 0) {
-    cartList[itemID][itemColor] = itemQuantity;
-  } else {
-    // Remove color:quantity entry
-    delete cartList[itemID][itemColor];
-    if(cartList[itemID] && Object.keys(cartList[itemID]).length === 0){ delete cartList[itemID];}
-    articleParent.remove();
+    // If quantity is not 0, modify quantity
+    if(itemQuantity > 0) {
+      cartList[itemID][itemColor] = itemQuantity;
+    } else {
+      // Remove color:quantity entry
+      delete cartList[itemID][itemColor];
+      if(cartList[itemID] && Object.keys(cartList[itemID]).length === 0){ delete cartList[itemID];}
+      articleParent.remove();
+    }
+    // Update localStorage cartList with new cart
+    localStorage.setItem("cartList", JSON.stringify(cartList));
   }
-  // Update localStorage cartList with new cart
-  localStorage.setItem("cartList", JSON.stringify(cartList));
 }
 
 // Function that verify fields info and trigger command
@@ -144,7 +146,7 @@ async function CommandVerification(item) {
   if(!OnlyLetters(nom)){validFields = false; document.getElementById('lastNameErrorMsg').innerHTML = "Sélectionnez un nom valide.";}
   if(/[^a-zA-Z0-9]+$/.test(adresse)){validFields = false; document.getElementById('addressErrorMsg').innerHTML = "Sélectionnez une adresse valide.";}
   if(!OnlyLetters(ville)){validFields = false; document.getElementById('cityErrorMsg').innerHTML = "Sélectionnez un ville valide.";}
-  if(!/.*@.*\..*/.test(email)){validFields = false; document.getElementById('emailErrorMsg').innerHTML = "Sélectionnez une adresse mail valide.";}
+  if(!/^[\w-\.]+@([\w-]+\.)+[\w-]{2,9}$/.test(email)){validFields = false; document.getElementById('emailErrorMsg').innerHTML = "Sélectionnez une adresse mail valide.";}
 
   // If command is valid and buyer information are valids
   if(validFields){
@@ -176,6 +178,9 @@ async function CommandVerification(item) {
 async function main() {
   // Set variables
   var cartList = JSON.parse(localStorage.getItem('cartList'));
+  if(!cartList){
+    cartList = {};
+  }
   var productList = await GetProductCatalog();
 
   // Display all product in cart and total cart informations

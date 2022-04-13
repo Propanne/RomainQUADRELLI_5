@@ -8,16 +8,31 @@ let allProducts = [];
 function DisplayAll(products) {
   // Get products container
   var items = document.querySelector('#items');
+
   // Iterate over Products array
   products.forEach( product => {
-    items.innerHTML += `
-      <a href="./product.html?id=${product.id}">
-        <article>
-          <img src="${product.imageUrl}" alt="${product.altTxt}">
-          <h3 class="productName">${product.name}</h3>
-          <p class="productDescription">${product.description}</p>
-        </article>
-      </a>`;
+    // Construct html template
+    var aTag = document.createElement('a');
+    var articleTag = document.createElement('article');
+    var imgTag = document.createElement('img');
+    var h3Tag = document.createElement('h3');
+    var imgTag = document.createElement('img');
+    var pTag = document.createElement('p');
+
+    // Modify attributes, inner content etc
+    aTag.setAttribute("href",'./product.html?id='+product.id);
+    imgTag.setAttribute("src",product.imageUrl);
+    imgTag.setAttribute("alt",product.altTxt)
+    h3Tag.innerText=product.name;
+    pTag.innerText=product.description;
+
+    articleTag.appendChild(h3Tag);
+    articleTag.appendChild(imgTag);
+    articleTag.appendChild(pTag);
+
+    aTag.appendChild(articleTag);
+
+    items.appendChild(aTag);
   });
 }
 

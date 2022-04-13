@@ -26,12 +26,13 @@ function DisplayAll(products) {
     h3Tag.innerText=product.name;
     pTag.innerText=product.description;
 
+    // Create HTML structure
     articleTag.appendChild(h3Tag);
     articleTag.appendChild(imgTag);
     articleTag.appendChild(pTag);
-
     aTag.appendChild(articleTag);
 
+    // Append structure to DOM
     items.appendChild(aTag);
   });
 }
